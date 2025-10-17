@@ -86,11 +86,21 @@ import { dbConnect } from "@/lib/dbConnect";
 import bcrypt from 'bcrypt';
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import UserModel from "@/model/User";
+import { signUpSchema } from "@/schemas/signUpSchema";
 
 export async function POST(request: Request) {
    await dbConnect()
    try {
-    const { username, email, password } =await request.json();
+    const body = await request.json();
+    const parsed = signUpSchema.safeParse(body);
+
+    if (!parsed.success) {
+      return Response.json(
+        { success: false, message: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+    const { username, email, password } = parsed.data;
     const existingUserByUsername = await UserModel.findOne({
         username,
         isVerified: true
