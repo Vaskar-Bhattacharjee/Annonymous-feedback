@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const user = session?.user as User;
     if (!session || !session.user) {
         return Response.json(
-            { success: false, message: "Unauthorized" },
+            { success: false, message: "Unauthorized. you need to login first" },
             { status: 401 }
         );
     }
@@ -21,8 +21,8 @@ export async function POST(request: Request) {
         const user = await UserModel.aggregate([
             { $match: { _id: userId } },
             { $unwind: "$messages" },
-            {$sort: { "messages.createdAt": -1 } },
-            {$group: {_id: "$_id", messages: { $push: "$messages" }}}
+            { $sort: { "messages.createdAt": -1 } },
+            { $group: {_id: "$_id", messages: { $push: "$messages" }}}
         ])
         if (!user || user.length === 0) {
             console.log("User not found");
