@@ -96,7 +96,7 @@ export async function POST(request: Request) {
 
     if (!parsed.success) {
       return Response.json(
-        { success: false, message: parsed.error.flatten() },
+        { success: false, message: parsed.error},
         { status: 400 }
       );
     }
@@ -116,7 +116,8 @@ export async function POST(request: Request) {
     })
 
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-    if (existingUserByEmail) {
+    
+     if (existingUserByEmail) {
         if (existingUserByEmail.isVerified) {
             return Response.json({
                 success: false,
@@ -157,13 +158,15 @@ export async function POST(request: Request) {
     if (!sendVerification.success) {
         return Response.json({
             success: false,
-            message: sendVerification.message
+            message: sendVerification.message,
+          
         }, { status: 500 })
     }else {
         return Response.json({
             success: true,
             message: "Verification code sent to email"
-        }, { status: 201 })
+                    }, { status: 201 })
+        console.log("verification code sent to email")
     }
 
    } catch (error) {

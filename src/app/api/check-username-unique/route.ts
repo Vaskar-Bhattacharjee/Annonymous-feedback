@@ -16,7 +16,8 @@ export async function GET(request: Request) {
         }
         const result = usernameQuerySchema.safeParse(queryParam);
         if (!result.success) {
-            const usernameErrors = result.error.format().username?._errors || [];
+            const formattedError = z.treeifyError(result.error);
+            const usernameErrors = formattedError.properties?.username?.errors || formattedError.errors || ["Invalid username"];
 
             return Response.json(
                 { success: false,
