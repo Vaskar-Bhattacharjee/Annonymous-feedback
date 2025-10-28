@@ -3,7 +3,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import axios, { AxiosError } from "axios"
-//import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useDebounce } from "@uidotdev/usehooks"
 import { toast } from "sonner" 
@@ -26,7 +25,6 @@ import { Loader2 } from "lucide-react"
 function Page() {
   const [username, setUsername] = useState('')
   const [usernameMessage, setUsernameMessage] = useState('')
-  const [loader, setLoader] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isCheckingUsername, setIsCheckingUsername] = useState(false)
   
@@ -74,7 +72,7 @@ function Page() {
       const response = await axios.post('/api/sign-up', data)
       if (response.data.success) {
         toast.success('Account created successfully')
-        //router.replace(`/verify/${username}`)
+        router.replace(`/verify/${username}`)
         console.log('Account created successfully' )
         setIsSubmitting(false)
       } else {
@@ -94,8 +92,8 @@ function Page() {
     
     h-[100vh]">
       
-        <div
-    style={{
+      <div
+      style={{
       position: 'absolute',
       top: 0,
       left: 0,
@@ -115,8 +113,8 @@ function Page() {
       `,
       pointerEvents: 'none',
       zIndex: 0,
-    }}
-  />
+      }}
+      />
 
 
         
@@ -140,14 +138,14 @@ function Page() {
                   <FormControl>
                     <Input 
                     
-                    placeholder="Enter username" {...field}
-                    className="text-white text-sm"
+                    placeholder="Enter user" {...field}
+                    className="text-white bg-black text-sm"
                     onChange={(e)=>{
                       field.onChange(e)
-                      setLoader(true)
+                      
                       setUsername(e.target.value )
                     }}
-                   
+                  
                     />
                   </FormControl>
                     
