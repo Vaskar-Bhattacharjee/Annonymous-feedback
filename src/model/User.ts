@@ -3,6 +3,7 @@ import mongoose, {Schema, Document} from "mongoose";
 export interface Message extends Document {
     content: string;
     createdAt: Date;
+    _id: string
 }
 
 const MessageSchema: Schema<Message> = new Schema({
@@ -20,7 +21,7 @@ export interface User extends Document {
     username: string;
     password: string;
     email: string;
-    verfiyCode: string;
+    verifyCode: string;
     isVerified: boolean;
     verifyCodeExpire: Date;
     isAcceptingMessage: boolean;
@@ -45,7 +46,7 @@ const UserSchema: Schema<User> = new Schema({
         required: [true, "password is required"],
         minlength: [6, "password must be at least 6 characters"],
     },
-    verfiyCode: {
+    verifyCode: {
         type: String,
         required: [true, "verfiyCode is required"],
     },

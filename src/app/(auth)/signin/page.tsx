@@ -65,7 +65,6 @@ function Page() {
   
   return (
     <div className=" relative flex justify-center items-center
-    
     h-[100vh] ">
       
       <div
