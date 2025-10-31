@@ -1,5 +1,5 @@
 'use client'
-import { use, useCallback, useEffect, useState } from 'react'
+ import { useCallback, useEffect, useState } from 'react'
 import { Message } from "@/model/User";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
@@ -7,7 +7,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { acceptMessageSchema } from '@/schemas/acceptMessageSchema';
 import axios, { AxiosError } from 'axios';
-import { set } from 'mongoose';
+
+
 
 
 function Page() {
@@ -74,13 +75,19 @@ function Page() {
         acceptMessages: !acceptMessages })
       setValue("messagesAccept", !acceptMessages) 
       toast.success("succesfully changed")
-    } catch (error) {
-      toast.error("Switch changed error occured")
+    } catch (error : unknown ) {
+      toast.error(`Switch changed error occured : ${error}`)
+      console.log(error)
     }
   }
   return (
-    <div>page</div>
+    <div className='w-full flex flex-col'>
+      <h1 className='text-black text-2xl font-mono'>Dashboard</h1>
+      <p className='text-black font-mono mt-8 text-xl '>Your Annonymous account controller panel</p>
+
+
+    </div>
   )
 }
 
-export default page
+export default Page

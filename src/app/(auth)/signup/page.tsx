@@ -80,9 +80,10 @@ function Page() {
         setIsSubmitting(false)
         console.log(response.data)
       }
+      console.log( "nothing there yet")
     } catch (error) {
       console.error('Signup error:', error)
-      toast.error('An error occurred during signup')
+      toast.error(`An error occurred during signup ${error}`)
       setIsSubmitting(false)
     }
   }

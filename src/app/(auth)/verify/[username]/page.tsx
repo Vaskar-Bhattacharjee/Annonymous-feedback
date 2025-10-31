@@ -35,17 +35,20 @@ const VerifyAccount = () => {
     const onSubmit = async (values: z.infer<typeof verifySchema>) => {
         try {
             setIsSubmitting(true)
-            const response = await axios.post("/api/auth/verifyEmail", {
+            console.log(param.username)
+            const trimmedCode = values.code.trim()
+            const response = await axios.post("/api/verify-email", {
                username: param.username,
-               code: values.code 
+               code: trimmedCode
                
             })
-            console.log(response.data)
-            toast.promise(response.data, {
-                loading: "Verifying...",
-                success: "Account verified successfully",
-                error: "Failed to verify account"
-            })
+            if (!response.data.success) {
+                toast.error(response.data.message)
+            }
+            if (response.data.success) {
+                toast.success(response.data.message)
+            }
+          
             router.push("/signin")
 
         } catch (error) {
