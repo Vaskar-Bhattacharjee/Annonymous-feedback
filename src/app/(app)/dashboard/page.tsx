@@ -1,93 +1,71 @@
-'use client'
- import { useCallback, useEffect, useState } from 'react'
-import { Message } from "@/model/User";
-import { toast } from "sonner";
-import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { acceptMessageSchema } from '@/schemas/acceptMessageSchema';
-import axios, { AxiosError } from 'axios';
+
+import { redirect } from 'next/navigation';
+import { getAuthSession } from '@/lib/auth'; // Your utility function using getServerSession
+import DashboardContent from './dashboard-content';
+import { dbConnect } from "@/lib/dbConnect";
+import UserModel from "@/model/User";
+import { NextResponse } from 'next/server';
 
 
-
-
-function Page() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [isSwitchWatching, setIsSwitchWatching] = useState(false);
+export default async function DashboardPage() {
+try {
+    dbConnect();
+    const session = await getAuthSession(); 
   
-  const handleDeleteMessage = async (messageId: string) => {
-    setMessages(messages.filter((message) => message._id !== messageId));
-  }
-  const {data: session} = useSession()
-  const form =  useForm({
-    resolver: zodResolver(acceptMessageSchema)
-  })
-  const {register, watch, setValue } = form
-  const acceptMessages = watch('messagesAccept')
+    if (!session || !session.user || !session.user.username) {
+      return NextResponse.json(
+        { success: false, message: "Unauthorized" },
+        { status: 401 }
+      )
+      console.log('session not found')
+    }
+   const userEmail = session?.user.email
+    const user = await UserModel.findOne({ email: userEmail });
+    user.lean();
+    if (!user) {
+      redirect('/signin');
   
-  const fetchAcceptMessages = useCallback(async () => {
-    setIsSwitchWatching(true);
-    try {
-      const response = await axios.get('/api/accept-messages')
-      setValue('messagesAccept', response.data.isAcceptingMessage)
-    } catch (error) {
-      const axiosError = error as AxiosError<{message: string}>
-      if (axiosError.response) {
-        toast.error(axiosError.response.data.message)
-      } else {
-        toast.error('Something went wrong')
-      }
-    }finally {
-      setIsSwitchWatching(false)
     }
+  
+    const plainUserObject = JSON.parse(JSON.stringify(user));
+    const fetchedUsername = plainUserObject.username;
+    const isMessageAccepting = plainUserObject.isAcceptingMessage // example
+    const initialMessages = plainUserObject.messages; // example
 
-  }, [setValue]);
 
-
-  const fetchMessages = useCallback(async (refresh : boolean) => {
-    setLoading(true);
-    setIsSwitchWatching(false);
-    try {
-      const response = await axios.get("/api/get-messages");
-      setMessages(response.data.messages || []);
-      toast.success('Messages fetched successfully')
-      if (refresh) {
-        toast.success('Messages refreshed successfully')
-      }
-    } catch (error : any) {
-      toast.error('Failed to fetch messages')
-    } finally {
-      setLoading(false);
-     setIsSwitchWatching(false);
-    }
-    }, [setLoading, setMessages]
-  )
-  useEffect(() => {
-    if (!session || !session.user) return;
-    fetchMessages(true)
-    fetchAcceptMessages();
-  }, [session, setValue, fetchMessages, fetchAcceptMessages]);
-
-  const handleSwitchChange = async () => {
-    try {
-      await axios.post('/api/accept-messages', {
-        acceptMessages: !acceptMessages })
-      setValue("messagesAccept", !acceptMessages) 
-      toast.success("succesfully changed")
-    } catch (error : unknown ) {
-      toast.error(`Switch changed error occured : ${error}`)
-      console.log(error)
-    }
-  }
+  // 4. Pass the guaranteed data to the Client Component
   return (
-    <div className='w-full flex flex-col'>
-      <h1 className='text-black text-2xl font-mono'>Dashboard</h1>
-      <p className='text-black font-mono mt-8 text-xl '>Your Annonymous account controller panel</p>
-
-
-    </div>
-  )
+    <DashboardContent
+      username={fetchedUsername} // Passed as a prop
+      initialMessages={initialMessages}
+      initialAcceptStatus={isMessageAccepting}
+    />
+  );
+}catch (error) {
+  console.error("Error fetching user data:", error);
+  return NextResponse.json(
+    { success: false, message: "Error fetching user data" },
+    { status: 500 }
+  );
+}
 }
 
-export default Page
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
