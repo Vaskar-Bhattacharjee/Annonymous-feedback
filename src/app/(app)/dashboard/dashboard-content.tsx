@@ -14,12 +14,19 @@ import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 
 
-interface DashboardContentProps {
-    username: string;
-    initialMessages: string[];
-    initialAcceptStatus: boolean;
+export interface ClientSafeMessage {
+    _id: string; 
+    content: string;
+    createdAt: string;
+    // Add any other message fields (must be strings, numbers, or booleans)
 }
 
+interface DashboardContentProps {
+    username: string;
+    // CRITICAL: Use the safe type for the messages array
+    initialMessages: ClientSafeMessage[]; 
+    initialAcceptStatus: boolean;
+}
 export default function DashboardContent({
   username,
   initialMessages,

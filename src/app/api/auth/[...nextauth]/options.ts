@@ -52,6 +52,7 @@ export const authOptions: NextAuthOptions = {
         token.isVerified = user?.isVerified;
         token.isAcceptingMessages = user?.isAcceptingMessages;
         token.username = user?.username;
+        token.email = user?.email;
      }
       return token
     },
@@ -62,6 +63,7 @@ export const authOptions: NextAuthOptions = {
             session.user.isVerified = token.isVerified as boolean;
             session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
             session.user.username = token.username as string;
+            session.user.email = token.email as string;
 
         }
       return session
