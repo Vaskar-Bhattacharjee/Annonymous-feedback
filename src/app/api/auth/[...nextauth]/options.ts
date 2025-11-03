@@ -32,9 +32,7 @@ export const authOptions: NextAuthOptions = {
                     if (!isPasswordValid) {
                         throw new Error("Invalid password");
                     }
-                    if (user) {
-                        return user;
-                    }
+                    return user
 
                 } catch (error : any) {
                     throw new Error("Authentication failed");
@@ -50,7 +48,7 @@ export const authOptions: NextAuthOptions = {
      if (user) {
         token._id = user?._id;
         token.isVerified = user?.isVerified;
-        token.isAcceptingMessages = user?.isAcceptingMessages;
+        token.isAcceptingMessage = user?.isAcceptingMessage;
         token.username = user?.username;
         token.email = user?.email;
      }
@@ -61,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         if (token) {
             session.user._id = token._id as string;
             session.user.isVerified = token.isVerified as boolean;
-            session.user.isAcceptingMessages = token.isAcceptingMessages as boolean;
+            session.user.isAcceptingMessage = token.isAcceptingMessage as boolean;
             session.user.username = token.username as string;
             session.user.email = token.email as string;
 

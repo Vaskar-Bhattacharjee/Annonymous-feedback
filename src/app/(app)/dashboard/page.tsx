@@ -4,8 +4,7 @@ import { getAuthSession } from '@/lib/auth'; // Your utility function using getS
 import DashboardContent, { ClientSafeMessage } from './dashboard-content';
 import { dbConnect } from "@/lib/dbConnect";
 import UserModel from "@/model/User";
-import { NextResponse } from 'next/server';
-
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 export default async function DashboardPage() {
 try {
@@ -37,9 +36,8 @@ try {
             } as ClientSafeMessage; 
         });
   
-    const plainUserObject = JSON.parse(JSON.stringify(user));
-    const fetchedUsername = plainUserObject.username;
-    const isMessageAccepting = plainUserObject.isAcceptingMessage // example
+    const fetchedUsername = user.username;
+    const isMessageAccepting =  user.isAcceptingMessage // example
     const initialMessages = serializedMessages; // example
 
 
@@ -53,10 +51,17 @@ try {
   );
 }catch (error) {
   console.error("Error fetching user data:", error);
-  return NextResponse.json(
-    { success: false, message: "Error fetching user data" },
-    { status: 500 }
-  );
+  if (isRedirectError(error)) {
+        throw error;
+    }
+  
+  return (
+      <div className="flex items-center justify-center min-h-screen">
+          <p className="text-xl text-red-500">
+              Error loading dashboard. Please try again.
+          </p>
+      </div>
+    );
 }
 }
 

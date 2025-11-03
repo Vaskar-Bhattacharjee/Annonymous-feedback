@@ -1,5 +1,5 @@
 'use client'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Message } from "@/model/User";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
@@ -12,19 +12,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
+import { signOut } from 'next-auth/react';
 
 
-export interface ClientSafeMessage {
-    _id: string; 
-    content: string;
-    createdAt: string;
-    // Add any other message fields (must be strings, numbers, or booleans)
-}
+// export interface ClientSafeMessage {
+//     _id: string; 
+//     content: string;
+//     createdAt: string;
+//     // Add any other message fields (must be strings, numbers, or booleans)
+// }
 
 interface DashboardContentProps {
     username: string;
     // CRITICAL: Use the safe type for the messages array
-    initialMessages: ClientSafeMessage[]; 
+    initialMessages: Message[]; 
     initialAcceptStatus: boolean;
 }
 export default function DashboardContent({
@@ -35,7 +36,7 @@ export default function DashboardContent({
 ) {
   const [messages, setMessages] = useState<Message[]>(initialMessages || []);
   const [loading, setLoading] = useState(false);
-  
+  const [userUrl, setUserUrl] = useState('');
   const handleDeleteMessage = async (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
   }
@@ -56,11 +57,17 @@ export default function DashboardContent({
 
     try {
       const response = await axios.get("/api/get-messages");
-      setMessages(response.data.messages || []);
-      toast.success('Messages fetched successfully')
-      if (refresh) {
-        toast.success('Messages refreshed successfully')
+      const messages = (response.data.messages || []) as Message[];
+      setMessages(messages);
+      if (messages.length > 0) {
+        toast.success('Messages fetched successfully')
       }
+      if (messages.length == 0) {
+        toast.success('Messages Not found')
+      }
+      // if (refresh) {
+      //   toast.success('Messages refreshed successfully')
+      // }
     } catch (error : any) {
       toast.error('Failed to fetch messages')
     } finally {
@@ -80,6 +87,12 @@ export default function DashboardContent({
       console.log(error)
     }
   }
+
+  useEffect(() => {
+  if (typeof window !== 'undefined') {
+    setUserUrl(`${window.location.origin}/u/${username}`);
+  }
+}, [username]);
   
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -90,6 +103,16 @@ export default function DashboardContent({
           <h1 className="text-4xl font-bold tracking-tight text-gray-900">
             Dashboard
           </h1>
+          <Button
+          className='shadow cursor-pointer '
+              variant="outline"
+              onClick={() => {
+                signOut()
+              }}
+              disabled={loading}
+          >
+            Logout
+          </Button>
           <p className="text-lg text-gray-600">
             Welcome back, <span className="font-semibold text-blue-600">{username}</span>
           </p>
@@ -106,16 +129,17 @@ export default function DashboardContent({
             <div className="flex items-center space-x-2 bg-gray-100 p-3 rounded-md">
               <input
                 type="text"
-                value={`${window.location.origin}/u/${username}`}
+                value={userUrl}
                 readOnly
                 className="flex-grow bg-transparent outline-none text-gray-700"
               />
               <Button
+                className="text-sm cursor-pointer"
                 variant="outline"
                 size="sm"
                 onClick={() => {
                   navigator.clipboard.writeText(
-                    `${window.location.origin}/u/${username}`
+                    userUrl
                   )
                   toast.success('URL copied!')
                 }}
@@ -147,7 +171,9 @@ export default function DashboardContent({
                         </p>
                       </div>
                       <FormControl>
-                        <Switch
+                        <Switch 
+                          className="mr-2 cursor-pointer"
+
                           checked={field.value}
                           onCheckedChange={handleSwitchChange}
                           
@@ -169,6 +195,7 @@ export default function DashboardContent({
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-semibold">Your Messages</h2>
             <Button
+              className='shadow cursor-pointer '
               variant="outline"
               onClick={() => fetchMessages(true)}
               disabled={loading}

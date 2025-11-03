@@ -6,7 +6,7 @@ declare module "next-auth" {
     _id: string; // Add your custom properties here
     username: string;
     isVerified: boolean;
-    isAcceptingMessages: boolean;
+    isAcceptingMessage: boolean;
   }
 
   // 2. Extend the Session type (data available in useSession)
@@ -15,7 +15,7 @@ declare module "next-auth" {
       _id: string; // Add your custom properties here
       username: string;
       isVerified: boolean;
-      isAcceptingMessages: boolean;
+      isAcceptingMessage: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -26,6 +26,6 @@ declare module "next-auth/jwt" {
     _id: string;
     username: string;
     isVerified: boolean;
-    isAcceptingMessages: boolean;
+    isAcceptingMessage: boolean;
   }
 }
