@@ -1,9 +1,9 @@
 
 import { redirect } from 'next/navigation';
 import { getAuthSession } from '@/lib/auth'; // Your utility function using getServerSession
-import DashboardContent, { ClientSafeMessage } from './dashboard-content';
+import DashboardContent from './dashboard-content';
 import { dbConnect } from "@/lib/dbConnect";
-import UserModel from "@/model/User";
+import UserModel, { Message } from "@/model/User";
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
 export default async function DashboardPage() {
@@ -26,14 +26,14 @@ try {
   
     }
 
-    const serializedMessages: ClientSafeMessage[] = (user.messages || []).map(msg => {
+    const serializedMessages: Message[] = (user.messages || []).map(msg => {
             // Guarantee that every property is a primitive string.
             return {
                 _id: String(msg._id),
                 content: msg.content,
                 // Ensure the Date object is converted to a string format (e.g., ISO string)
                 createdAt: (msg.createdAt as Date).toISOString(), 
-            } as ClientSafeMessage; 
+            } ; 
         });
   
     const fetchedUsername = user.username;

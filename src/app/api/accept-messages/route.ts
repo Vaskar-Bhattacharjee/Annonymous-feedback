@@ -16,7 +16,7 @@ export async function POST(request: Request) {
             { status: 401 }
         );
     }
-    const userId = user.id;
+    const userId = user._id;
     const { acceptMessages } = await request.json();
     try {
         const updatedUser = await UserModel.findByIdAndUpdate(
