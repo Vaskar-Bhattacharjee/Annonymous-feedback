@@ -157,7 +157,7 @@ export default function DashboardContent({
      via-black to-gray-900 p-4 sm:px-10 md:mx-0 lg:mx-0 md:p-8"
    
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl sm:max-w-3xl md:max-w-4xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         
         {/* Header */}
         <motion.div className="mb-10 flex items-center justify-between"
@@ -165,50 +165,13 @@ export default function DashboardContent({
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl font-bold tracking-tight text-white "
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white "
     
 
           >
             Dashboard
           </h1>
-            <DropdownMenu>
-              {/* Trigger button using the username */}
-              <DropdownMenuTrigger asChild> 
-                <Button variant="link" className="text-lg font-semibold text-white undrerline
-                 underline-offset-4 cursor-pointer
-                 px-4 py-4 rounded-lg">
-                  {username}
-                </Button>
-              </DropdownMenuTrigger>
-              
-              <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                
-                {/* LOGOUT BUTTON: Now uses AlertDialogTrigger and sets state */}
-                <AlertDialogTrigger asChild>
-                    <DropdownMenuItem 
-                        onClick={() => setActionToConfirm('logout')} 
-                        className="cursor-pointer"
-                    >
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Logout</span>
-                    </DropdownMenuItem>
-                </AlertDialogTrigger>
-                
-                {/* DELETE ACCOUNT BUTTON: Uses AlertDialogTrigger and sets state */}
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem 
-                      onClick={() => setActionToConfirm('delete')}
-                      className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
-                  >
-                    <UserX className="mr-2 h-4 w-4" />
-                    <span>Delete Account</span>
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                
-              </DropdownMenuContent>
-            </DropdownMenu>
+
          
           
         </motion.div>
@@ -216,7 +179,7 @@ export default function DashboardContent({
         <Card className=" bg-transparent border-none mb-[-1rem] ">
           <CardHeader className='bg-transparent h-10 m-0 p-0'>
             <CardTitle
-            className='bg-transparent mb-[-0.5rem] p-0 text-white text-2xl font-semibold'
+            className='bg-transparent mb-[-0.5rem] p-0 text-white text-xl sm:text-2xl md:text-3xl lg:text-3xl  font-semibold'
             >Your Anonymous URL</CardTitle>
             <CardDescription
             className='text-gray-300 text-[18px] mb-4'
@@ -282,7 +245,7 @@ export default function DashboardContent({
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg  bg-transparent">
                      
-                        <FormLabel className="text-white font-semibold text-2xl">
+                        <FormLabel className="text-white font-semibold text-xl sm:text-2xl md:text-3xl lg:text-3xl">
                          Are You Accepting New Messages :
                         </FormLabel>
                        
@@ -401,42 +364,7 @@ export default function DashboardContent({
       </div>
     </div>
 
-    <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center">
-            {dialogTitle}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            {dialogDescription}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          {/* Cancel Button */}
-          <AlertDialogCancel asChild>
-            <Button className='cursor-pointer outline-0' variant="outline" disabled={isDeleting}>Cancel</Button>
-          </AlertDialogCancel>
-          
-          {/* Action Button: Handles the dynamic logic */}
-          <AlertDialogAction 
-            asChild
-            onClick={handleAction} // Executes either logout or delete
-            disabled={isDeleting}
-          >
-            <Button
-              // Use conditional variants for styling (destructive for delete)
-              className="cursor-pointer"
-              variant={actionVariant as 'destructive' | 'default'} 
-              disabled={isDeleting}
-            >
-              {/* Show spinner only if deleting and isDeleting is true */}
-              {isDelete && isDeleting ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : null}
-              {actionText}
-            </Button>
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+  
     </AlertDialog>
   
     
