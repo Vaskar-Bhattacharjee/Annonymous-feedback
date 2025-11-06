@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { acceptMessageSchema } from '@/schemas/acceptMessageSchema';
 import axios from 'axios';
-import { AlertTriangle, Loader2, LogOut, Trash, UserX } from 'lucide-react';
+import { AlertTriangle, Loader2, LogOut, RotateCcw, Trash, UserX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
@@ -15,7 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { signOut } from 'next-auth/react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-
+import { motion } from "framer-motion"
 interface DashboardContentProps {
     username: string;
     initialMessages: Message[]; 
@@ -32,9 +32,10 @@ export default function DashboardContent({
   const [userUrl, setUserUrl] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [actionToConfirm, setActionToConfirm] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const handleDeleteMessage = async (messageId: string) => {
-    setMessages(messages.filter((message) => message._id !== messageId));
-  }
+   messages.filter((message) => message._id !== messageId);
+  } 
 
 
   // const handleDeleteAccount = async () => {
@@ -98,16 +99,22 @@ export default function DashboardContent({
       const messages = (response.data.messages || []) as Message[];
       setMessages(messages);
       if (messages.length > 0) {
-        toast.success('Messages fetched successfully')
+        toast.success('Messages fetched successfully', {
+          duration: 2000
+        })
       }
       if (messages.length == 0) {
-        toast.success('Messages Not found')
+        toast.success('Messages Not found', {
+          duration: 2000
+        })
       }
       // if (refresh) {
       //   toast.success('Messages refreshed successfully')
       // }
     } catch (error : any) {
-      toast.error('Failed to fetch messages')
+      toast.error('Failed to fetch messages', {
+          duration: 2000
+        })
     } finally {
       setLoading(false);
     }
@@ -120,9 +127,20 @@ export default function DashboardContent({
       acceptMessages: !acceptMessages })
 
       setValue("messagesAccept", !acceptMessages) 
-      toast.success("succesfully changed")
+      if (acceptMessages === true) {
+        toast.success("You are now accepting messages", {
+          duration: 2000
+        })
+      } else if(acceptMessages === false){
+        toast.success("You are not accepting messages", {
+        duration: 3000
+      })
+      }
+     
     } catch (error : unknown ) {
-      toast.error(`Switch changed error occured : ${error}`)
+      toast.error(`Switch changed error occured : ${error}`, {
+          duration: 2000
+        })
       console.log(`Switch changed error occured : ${error}`)
     }
   }
@@ -135,12 +153,22 @@ export default function DashboardContent({
   
   return (
     <AlertDialog>
-    <div className="min-h-screen bg-black p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900
+     via-black to-gray-900 p-4 sm:px-10 md:mx-0 lg:mx-0 md:p-8"
+   
+    >
       <div className="max-w-4xl mx-auto">
         
         {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-4xl font-bold tracking-tight text-white ">
+        <motion.div className="mb-10 flex items-center justify-between"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-4xl font-bold tracking-tight text-white "
+    
+
+          >
             Dashboard
           </h1>
             <DropdownMenu>
@@ -148,7 +176,7 @@ export default function DashboardContent({
               <DropdownMenuTrigger asChild> 
                 <Button variant="link" className="text-lg font-semibold text-white undrerline
                  underline-offset-4 cursor-pointer
-                 px-4 py-2 rounded-lg">
+                 px-4 py-4 rounded-lg">
                   {username}
                 </Button>
               </DropdownMenuTrigger>
@@ -183,75 +211,95 @@ export default function DashboardContent({
             </DropdownMenu>
          
           
-        </div>
+        </motion.div>
         {/* Unique URL Card */}
-        <Card className="mb-6 bg-transparent border-0 hover:border-1 duration-100 ease-in-out ">
-          <CardHeader className='bg-transparent h-10 '>
+        <Card className=" bg-transparent border-none mb-[-1rem] ">
+          <CardHeader className='bg-transparent h-10 m-0 p-0'>
             <CardTitle
-            className='bg-transparent text-white text-2xl font-semibold'
+            className='bg-transparent mb-[-0.5rem] p-0 text-white text-2xl font-semibold'
             >Your Anonymous URL</CardTitle>
             <CardDescription
-            className='text-gray-300 text-md'
+            className='text-gray-300 text-[18px] mb-4'
             >
               Share this link for people to send you anonymous messages.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-2 bg-transparent underline underline-offset-4 p-3 rounded-md">
+          <CardContent
+          className='m-0  p-0'
+          >
+            <div className="flex items-center space-x-2 bg-transparent underline underline-offset-4 mt-4 rounded-md">
               <input
                 type="text"
                 value={userUrl}
                 readOnly
-                className="flex-grow bg-transparent outline-none text-md text-gray-200"
+                className="flex-grow bg-transparent outline-none text-[18px] stre  text-white font-serif font-stretch-semi-expanded"
               />
-              <Button
-                className="text-sm decoration-none cursor-pointer bg-transparent text-white border border-amber-100 hover:bg-amber-100 hover:text-black"
-                variant="default"
-                size="lg"
+
+              <motion.div
+              animate={copied ? { scale: [1, 1.2, 1] } : {}}
+              transition={{ duration: 0.3 }}
+              >
+                <Button
+                className="text-sm mb-1 decoration-none cursor-pointer bg-transparent text-white border border-amber-100 hover:bg-amber-100 hover:text-black"
+                variant="outline"
+                size="sm"
                 onClick={() => {
                   navigator.clipboard.writeText(
                     userUrl
                   )
-                  toast.success('URL copied!')
+                  setCopied(true)
+                  toast.success('URL copied!', {
+                    duration: 2000
+                  })
                 }}
               >
-                Copy
+                {copied ? 'Copied!' : 'Copy'}
               </Button>
+            </motion.div>
+
+
               
             </div>
-            <div className='w-full h-0.5 bg-gray-700'></div>
+            
           </CardContent>
+          <Separator className="my-0" />
         </Card>
+        
 
         {/* Control Panel Card */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Control Panel</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <Card className="mb-6 bg-transparent border-0 h-5">
+         
+          <CardContent
+          className='h-6  m-0 p-0 '
+          >
             <Form {...form}>
-              <form>
+              <form
+              
+              >
                 <FormField
+                
                   name="acceptMessages"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">
-                          Accepting Messages
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg  bg-transparent">
+                     
+                        <FormLabel className="text-white font-semibold text-2xl">
+                         Are You Accepting New Messages :
                         </FormLabel>
-                        <p className="text-sm text-gray-500">
-                          Toggle this to stop receiving new messages.
-                        </p>
-                      </div>
-                      <FormControl>
-                        <Switch 
-                          className="mr-2 cursor-pointer"
+                       
+                      
+                      <FormControl >
+                        <motion.div  whileTap={{ scale: 0.95 }} >
+
+                          <Switch 
+                          className="mr-2 cursor-pointer border-2 ring-1 ring-white/70 transition-all duration-300 data-[state=checked]:bg-green-500 data-[state=checked]:ring-green-400 "
 
                           checked={field.value}
                           onCheckedChange={handleSwitchChange}
                           
                           aria-readonly
                         />
+                        </motion.div>
+                        
                       </FormControl>
                     </FormItem>
                   )}
@@ -268,7 +316,7 @@ export default function DashboardContent({
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-semibold">Your Messages</h2>
             <Button
-              className='shadow cursor-pointer '
+              className="flex items-center gap-2 group cursor-pointer"
               variant="outline"
               onClick={() => fetchMessages(true)}
               disabled={loading}
@@ -276,18 +324,47 @@ export default function DashboardContent({
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                'Refresh'
+                <div className='flex gap-1 items-center '>
+                  <RotateCcw className="h-4 w-4 group-hover:rotate-180 transition duration-300" />
+                  {'Refresh'}
+                </div>
               )}
             </Button>
           </div>
 
           {/* Message List Grid */}
           {messages.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {messages.map((message) => (
-                <Card key={message._id}>
+            <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2
+             lg:grid-cols-3 gap-4"
+             initial="hidden"
+              animate="visible"
+              variants={{
+                visible: { transition: { staggerChildren: 0.1 } }
+              }}
+                        
+             >
+              {messages.map((message, index) => (
+                <motion.div
+                key={message._id}
+                variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+                }}
+                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                >
+
+                <Card
+                className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/10"
+
+                style={{ 
+                  animation: `fadeInUp 0.5s ease-out ${index * 100}ms forwards`,
+                  transitionProperty: 'opacity, transform'
+                 }}
+                key={message._id}>
                   <CardHeader>
-                    <CardTitle>{message.content}</CardTitle>
+                    <CardTitle className="line-clamp-3">{message.content}</CardTitle>
                     <CardDescription>
                       {/* You can format this date */}
                       Received at: {String(message.createdAt)}
@@ -297,16 +374,27 @@ export default function DashboardContent({
                     <Button
                       variant="destructive"
                       size="sm"
+                      className="transition-all hover:scale-105"
                       onClick={() => handleDeleteMessage(message._id)}
                     >
                       <Trash className="h-4 w-4 mr-2" /> Delete
                     </Button>
                   </CardContent>
                 </Card>
+
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           ) : (
-            <p className="text-gray-500">No anonymous messages yet.</p>
+            <div className="flex flex-col items-center justify-center py-16 animate-in fade-in duration-500">
+              <div className="w-24 h-24 mb-6 rounded-full bg-gray-800/50 flex items-center justify-center">
+                <svg className="w-12 h-12 text-gray-600" /* mail icon */ />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-300 mb-2">No messages yet</h3>
+              <p className="text-gray-500 text-center max-w-sm">
+                Share your anonymous URL and start receiving messages from friends!
+              </p>
+            </div>
           )}
         </div>
 
@@ -325,7 +413,7 @@ export default function DashboardContent({
         <AlertDialogFooter>
           {/* Cancel Button */}
           <AlertDialogCancel asChild>
-            <Button className='cursor-pointer' variant="outline" disabled={isDeleting}>Cancel</Button>
+            <Button className='cursor-pointer outline-0' variant="outline" disabled={isDeleting}>Cancel</Button>
           </AlertDialogCancel>
           
           {/* Action Button: Handles the dynamic logic */}
