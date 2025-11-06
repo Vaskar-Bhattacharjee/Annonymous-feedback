@@ -6,16 +6,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { acceptMessageSchema } from '@/schemas/acceptMessageSchema';
 import axios from 'axios';
-import { AlertTriangle, Loader2, LogOut, RotateCcw, Trash, UserX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { signOut } from 'next-auth/react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { motion } from "framer-motion"
+import { Loader2, RotateCcw } from 'lucide-react';
 interface DashboardContentProps {
     username: string;
     initialMessages: Message[]; 
@@ -30,8 +27,6 @@ export default function DashboardContent({
   const [messages, setMessages] = useState<Message[]>(initialMessages || []);
   const [loading, setLoading] = useState(false);
   const [userUrl, setUserUrl] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [actionToConfirm, setActionToConfirm] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const handleDeleteMessage = async (messageId: string) => {
    messages.filter((message) => message._id !== messageId);
@@ -51,34 +46,7 @@ export default function DashboardContent({
   //     setIsDeleting(false);
   //   }
   // };
-  const handleAction = async (e: React.MouseEvent) => {
-    e.preventDefault(); 
-    if (actionToConfirm === 'logout') {
-     signOut();
 
-    } else if (actionToConfirm === 'delete') {
-      
-      //await handleDeleteAccount(); 
-    }
-    setActionToConfirm(null);
-  };
-  const isDelete = actionToConfirm === 'delete';
-  const dialogTitle = isDelete ? (
-    <>
-      <AlertTriangle className="text-red-600 mr-2" />
-      Are you absolutely sure?
-    </>
-  ) : (
-    "Confirm Logout"
-  );
- const dialogDescription = isDelete ? (
-    "This action cannot be undone. This will permanently delete your account and remove all your messages from our servers."
-  ) : (
-    "You will be immediately logged out of your session. Do you want to continue?"
-  );
-
-  const actionText = isDelete ? (isDeleting ? 'Deleting...' : 'Yes, delete my account') : 'Yes, Logout';
-  const actionVariant = isDelete ? 'destructive' : 'default'; 
 
 
  const form =  useForm({
@@ -91,7 +59,7 @@ export default function DashboardContent({
   const acceptMessages = watch('messagesAccept')
   
   
-  const fetchMessages = useCallback(async (refresh : boolean) => {
+  const fetchMessages = useCallback(async () => {
     setLoading(true);
 
     try {
@@ -111,7 +79,7 @@ export default function DashboardContent({
       // if (refresh) {
       //   toast.success('Messages refreshed successfully')
       // }
-    } catch (error : any) {
+    } catch (error : unknown ) {
       toast.error('Failed to fetch messages', {
           duration: 2000
         })
@@ -152,7 +120,7 @@ export default function DashboardContent({
 }, [username]);
   
   return (
-    <AlertDialog>
+
     <div className="min-h-screen bg-gradient-to-br from-gray-900
      via-black to-gray-900 p-4 sm:px-10 md:mx-0 lg:mx-0 md:p-8"
    
@@ -365,7 +333,7 @@ export default function DashboardContent({
     </div>
 
   
-    </AlertDialog>
+  
   
     
   )
