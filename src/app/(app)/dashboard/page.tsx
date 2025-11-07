@@ -6,6 +6,7 @@ import { dbConnect } from "@/lib/dbConnect";
 import UserModel, { Message } from "@/model/User";
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 
+export const dynamic = 'force-dynamic';
 export default async function DashboardPage() {
 try {
      await dbConnect();
@@ -38,12 +39,14 @@ try {
   
     const fetchedUsername = user.username;
     const isMessageAccepting =  user.isAcceptingMessage // example
+    console.log("isMessageAccepting",isMessageAccepting)
     const initialMessages = serializedMessages; // example
 
 
   // 4. Pass the guaranteed data to the Client Component
   return (
     <DashboardContent
+      key={String(isMessageAccepting)}
       username={fetchedUsername} // Passed as a prop
       initialMessages={initialMessages}
       initialAcceptStatus={isMessageAccepting}

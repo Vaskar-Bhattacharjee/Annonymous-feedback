@@ -12,7 +12,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { motion } from "framer-motion"
-import { Loader2, RotateCcw } from 'lucide-react';
+import { Loader2, RotateCcw, Trash } from 'lucide-react';
+
 interface DashboardContentProps {
     username: string;
     initialMessages: Message[]; 
@@ -28,92 +29,93 @@ export default function DashboardContent({
   const [loading, setLoading] = useState(false);
   const [userUrl, setUserUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  const [isAcceptingMessages, setIsAcceptingMessages] = useState(initialAcceptStatus);
   const handleDeleteMessage = async (messageId: string) => {
-   messages.filter((message) => message._id !== messageId);
-  } 
-
-
-  // const handleDeleteAccount = async () => {
-  //   setIsDeleting(true);
-  //   try {
-  //     await axios.delete('/api/delete-account');
-  //     toast.success("Account deleted successfully. Logging out...");
-  //     setTimeout(() => {
-  //       signOut({ callbackUrl: '/' });
-  //     }, 2000);
-  //   } catch (error) {
-  //     toast.error("Failed to delete account. Please try again.");
-  //     setIsDeleting(false);
-  //   }
-  // };
-
-
-
- const form =  useForm({
-    resolver: zodResolver(acceptMessageSchema), 
-    defaultValues: {
-      messagesAccept: initialAcceptStatus
-    }
-  })
-  const { watch, setValue } = form
-  const acceptMessages = watch('messagesAccept')
-  
-  
-  const fetchMessages = useCallback(async () => {
-    setLoading(true);
-
+    // update local state immediately
+    setMessages((prev) => prev.filter((message) => message._id !== messageId));
+    // optional: notify server about deletion
     try {
-      const response = await axios.get("/api/get-messages");
-      const messages = (response.data.messages || []) as Message[];
-      setMessages(messages);
-      if (messages.length > 0) {
-        toast.success('Messages fetched successfully', {
-          duration: 2000
-        })
-      }
-      if (messages.length == 0) {
-        toast.success('Messages Not found', {
-          duration: 2000
-        })
-      }
-      // if (refresh) {
-      //   toast.success('Messages refreshed successfully')
-      // }
-    } catch (error : unknown ) {
-      toast.error('Failed to fetch messages', {
-          duration: 2000
-        })
-    } finally {
-      setLoading(false);
-    }
-    }, []
-  )
-
-  const handleSwitchChange = async () => {
-    try {
-      await axios.post('/api/accept-messages', {
-      acceptMessages: !acceptMessages })
-
-      setValue("messagesAccept", !acceptMessages) 
-      if (acceptMessages === true) {
-        toast.success("You are now accepting messages", {
-          duration: 2000
-        })
-      } else if(acceptMessages === false){
-        toast.success("You are not accepting messages", {
-        duration: 3000
-      })
-      }
-     
-    } catch (error : unknown ) {
-      toast.error(`Switch changed error occured : ${error}`, {
-          duration: 2000
-        })
-      console.log(`Switch changed error occured : ${error}`)
+      await axios.post('/api/delete-message', { id: messageId });
+      toast.success('Message deleted', {
+        duration: 2000,
+      });
+    } catch (error: unknown) {
+      toast.error('Failed to delete message', {
+        duration: 2000,
+      });
+      console.error(error);
     }
   }
+  const initialMessage = initialAcceptStatus
+  console.log("initialMessage", initialMessage)
 
-  useEffect(() => {
+  // const form =  useForm({
+  //   resolver: zodResolver(acceptMessageSchema), 
+  //   defaultValues: {
+  //     messagesAccept: initialAcceptStatus
+      
+  //   },
+    
+  // })
+  // const messageAc = form.watch('messagesAccept')
+  // console.log("messagesAccept", messageAc)
+  // const { watch, setValue } = form
+  // const acceptMessages = watch('messagesAccept')
+  
+  
+const fetchMessages = useCallback(async () => {
+  setLoading(true);
+
+  try {
+    const response = await axios.get("/api/get-messages");
+    const messages = (response.data.messages || []) as Message[];
+    setMessages(messages);
+    if (messages.length > 0) {
+      toast.success('Messages fetched successfully', {
+        duration: 2000
+      });
+    } else {
+      toast.success('Messages Not found', {
+        duration: 2000
+      });
+    }
+  } catch (error : unknown ) {
+    toast.error(`Failed to fetch messages: ${error}`, {
+      duration: 2000
+    });
+    console.log(`Failed to fetch messages: ${error}`);
+  } finally {
+    setLoading(false);
+  }
+}, []);
+
+const handleSwitchChange = async (checked?: boolean) => {
+  const newValue = typeof checked === 'boolean' ? checked : !isAcceptingMessages;
+  try {
+    await axios.post('/api/accept-messages', {
+      acceptMessages: newValue,
+    });
+
+    setIsAcceptingMessages(newValue);
+
+    if (newValue) {
+      toast.success("You are now accepting messages", {
+        duration: 2000,
+      });
+    } else {
+      toast.success("You are not accepting messages", {
+        duration: 2000,
+      });
+    }
+  } catch (error: unknown) {
+    toast.error('Switch changed error occured', {
+      duration: 2000,
+    });
+    console.error(error);
+  }
+};
+
+useEffect(() => {
   if (typeof window !== 'undefined') {
     setUserUrl(`${window.location.origin}/u/${username}`);
   }
@@ -121,11 +123,11 @@ export default function DashboardContent({
   
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-gray-900
-     via-black to-gray-900 p-4 sm:px-10 md:mx-0 lg:mx-0 md:p-8"
+    <div className="min-h-screen bg-gradient-to-br from-gray-800
+     via-black to-gray-700 p-4 sm:px-10 md:mx-0 lg:mx-0 md:p-8 "
    
     >
-      <div className="max-w-7xl sm:max-w-3xl md:max-w-4xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+      <div className="max-w-7xl sm:max-w-3xl md:max-w-4xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-[-1rem] md:py-8">
         
         {/* Header */}
         <motion.div className="mb-10 flex items-center justify-between"
@@ -186,58 +188,31 @@ export default function DashboardContent({
               >
                 {copied ? 'Copied!' : 'Copy'}
               </Button>
-            </motion.div>
-
-
-              
+              </motion.div>
             </div>
-            
-          </CardContent>
-          <Separator className="my-0" />
-        </Card>
-        
-
-        {/* Control Panel Card */}
-        <Card className="mb-6 bg-transparent border-0 h-5">
-         
+            <Separator className="mt-1 mb-5" />
           <CardContent
           className='h-6  m-0 p-0 '
           >
-            <Form {...form}>
-              <form
-              
-              >
-                <FormField
-                
-                  name="acceptMessages"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg  bg-transparent">
-                     
-                        <FormLabel className="text-white font-semibold text-xl sm:text-2xl md:text-3xl lg:text-3xl">
-                         Are You Accepting New Messages :
-                        </FormLabel>
-                       
-                      
-                      <FormControl >
-                        <motion.div  whileTap={{ scale: 0.95 }} >
-
-                          <Switch 
-                          className="mr-2 cursor-pointer border-2 ring-1 ring-white/70 transition-all duration-300 data-[state=checked]:bg-green-500 data-[state=checked]:ring-green-400 "
-
-                          checked={field.value}
-                          onCheckedChange={handleSwitchChange}
-                          
-                          aria-readonly
-                        />
-                        </motion.div>
-                        
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+            
+              <form>
+                <div>
+                  <div className="flex flex-row items-center justify-between rounded-lg  bg-transparent">
+                    <div className="text-white font-semibold text-xl sm:text-2xl md:text-3xl lg:text-3xl">
+                      Are You Accepting New Messages :
+                    </div>
+                    <Switch
+                      className="mr-2 cursor-pointer border-2 ring-1 ring-white/70 transition-all duration-300 data-[state=checked]:bg-green-500 data-[state=checked]:ring-green-400 "
+                      checked={isAcceptingMessages}
+                      onCheckedChange={handleSwitchChange}
+                      aria-readOnly
+                    />
+                  </div>
+                </div>
               </form>
-            </Form>
+            
           </CardContent>
+            </CardContent>
         </Card>
         
         <Separator className="my-6" />
@@ -249,7 +224,7 @@ export default function DashboardContent({
             <Button
               className="flex items-center gap-2 group cursor-pointer"
               variant="outline"
-              onClick={() => fetchMessages(true)}
+              onClick={() => fetchMessages()}
               disabled={loading}
             >
               {loading ? (
