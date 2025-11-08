@@ -47,8 +47,8 @@ export function Navbar() {
 
     return (
         <AlertDialog>
-        <nav className=" p-4 bg-black text-white">
-            <div className="flex items-center justify-between  mx-4 sm:mx-10 md:mx-9 lg:mx-27">
+        <nav className="z-50 w-full p-4 bg-black text-white">
+            <div className="flex items-center justify-between  mx-4 sm:mx-10 md:mx-9 lg:mx-27 z-10000">
                 <a 
                 className="font-semibold text-xl tracking-tight hover:underline cursor-pointer
                 "
