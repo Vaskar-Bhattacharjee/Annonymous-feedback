@@ -19,6 +19,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect"
 
 
 
@@ -92,42 +93,20 @@ function Page() {
     <div className=" relative flex justify-center items-center
     
     h-[100vh]">
-      
-      <div
-      style={{
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      backgroundImage: `
-        repeating-linear-gradient(
-          0deg,
-          rgba(0,0,0,0.05) 0 1px,
-          transparent 1px 20px
-        ),
-        repeating-linear-gradient(
-          90deg,
-          rgba(0,0,0,0.05) 0 1px,
-          transparent 1px 20px
-        )
-      `,
-      pointerEvents: 'none',
-      zIndex: 0,
-      }}
-      />
+
+      <BackgroundRippleEffect className="min-h-[100vh] min-w-[100vw]" />
 
 
         
 
     <div className="max-w-md mx-auto mt-10 
-    bg-black p-8 rounded-lg shadow-lg flex flex-col justify-center items-center">
+    bg-white p-8 rounded-lg shadow-lg flex flex-col justify-center items-center">
       <h1 className="text-3xl font-bold
       mx-auto tracking-wider font-mono
 
-      mb-6 text-white">Welcome to mistery message Service </h1>
+      mb-6 text-black">Welcome to mistery message Service </h1>
 
-      <h1 className="text-2xl font-bold mb-6 text-white">Sign Up</h1>
+      <h1 className="text-2xl font-bold mb-6 text-black">Sign Up</h1>
       <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
             <FormField
@@ -135,12 +114,11 @@ function Page() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Username</FormLabel>
+                  <FormLabel className="text-black font-semibold">Username</FormLabel>
                   <FormControl>
                     <Input 
                     
                     placeholder="Enter user" {...field}
-                    className="text-white bg-black text-sm"
                     onChange={(e)=>{
                       field.onChange(e)
                       
@@ -182,10 +160,9 @@ function Page() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email</FormLabel>
+                  <FormLabel className="text-black font-semibold">Email</FormLabel>
                   <FormControl>
                     <Input
-                    className="text-white text-sm bg-black"
                     placeholder="Enter email " {...field} />
                   </FormControl>
                   <FormMessage />
@@ -198,12 +175,10 @@ function Page() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Password</FormLabel>
+                  <FormLabel className="text-black font-semibold">Password</FormLabel>
                   <FormControl>
                     <Input 
-                    type="password"
-                    className="text-sm text-white"
-                    placeholder="Enter Password" {...field} />
+                    type="password"                    placeholder="Enter Password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

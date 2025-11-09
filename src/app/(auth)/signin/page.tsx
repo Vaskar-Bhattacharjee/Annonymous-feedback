@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { logInSchema } from "@/schemas/logInSchema"
+import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect"
+import Link from "next/link"
 
 
 
@@ -66,8 +68,8 @@ function Page() {
   return (
     <div className=" relative flex justify-center items-center
     h-[100vh] ">
-      
-      <div
+      <BackgroundRippleEffect className="min-h-[100vh] min-w-[100vw]" />
+      {/* <div
       style={{
       position: 'absolute',
       top: 0,
@@ -89,15 +91,15 @@ function Page() {
       pointerEvents: 'none',
       zIndex: 0,
       }}
-      />
+      /> */}
 
 
         
 
     <div className="max-w-md  mx-auto mt-10 w-[200rem]
-    bg-black p-8 rounded-lg shadow-lg flex flex-col justify-center items-center">
+    bg-white p-8 rounded-lg shadow-lg flex flex-col justify-center items-center">
       
-      <h1 className="text-2xl font-bold mb-6 text-white">Sign In</h1>
+      <h1 className="text-2xl font-bold mb-6 text-black">Sign In</h1>
       <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4">
             
@@ -107,7 +109,7 @@ function Page() {
               name="identifier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Email</FormLabel>
+                  <FormLabel className="text-black font-semibold">Email</FormLabel>
                   <FormControl>
                     <Input
                     className="text-white text-sm bg-black"
@@ -123,11 +125,11 @@ function Page() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Password</FormLabel>
+                  <FormLabel className="text-black font-semibold ">Password</FormLabel>
                   <FormControl>
                     <Input 
                     type="password"
-                    className="text-sm text-white"
+                    className="text-sm text-black bg-white"
                     placeholder="Enter Password" {...field} />
                   </FormControl>
                   <FormMessage />
@@ -136,7 +138,7 @@ function Page() {
             />
             <Button type="submit" disabled={isSubmitting }
             className="w-full mt-4 border
-            cursor-pointer hover:bg-amber-100 hover:text-black border-amber-100">
+            cursor-pointer hover:bg-amber-100 hover:text-black border-amber-500">
               {isSubmitting ? 
               <div className="flex">
                 <Loader2 className="animate-spin mr-2 h-4 w-4
@@ -150,6 +152,10 @@ function Page() {
               
               : 'Sign In'}
             </Button>
+
+            <div className="flex justify-center items-center">
+              <p className="text-md mx-auto text-gray-600">Don't have an account? <Link href="/signup" className="text-blue-500 hover:underline">Sign up</Link></p>
+            </div>
           </form>
         </Form>
       

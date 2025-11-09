@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel"
 import AutoPlay from "embla-carousel-autoplay"
 import messages from '@/messages.json'
+import { BackgroundRippleEffect } from '@/components/ui/background-ripple-effect'
 
 //import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 
@@ -19,11 +20,11 @@ function Home() {
     
 
     <div className="max-w-screen min-h-screen flex items-center flex-col justify-center bg-gradient-to-br from-black via-gray-800 to-gray-800">
-          {/* <div className="absolute inset-0 -z-0">
-              <BackgroundRippleEffect />
-          </div> */}
+          <div className="absolute inset-0 -z-0">
+              
+          </div>
       
-      <h1 className='font-bold text-5xl mt-8 font-mono tracking-tighter word-spacing-1 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100' >Share Your Thoughts Anonymously</h1>
+      <h1 className='font-bold text-[42px] mt-8 py-4 font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100' >Share Your Thoughts Anonymously</h1>
       <p className='text-[18px] mx-40 my-4 text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100 '>Welcome to our anonymous feedback platform where you can express your opinions freely and safely.<br /> Your voice matters, and we ensure your privacy while sharing feedback.</p>
        {/* Carousel */}
       <div className='w-1/2 h-1/2 mt-8 flex justify-center'>

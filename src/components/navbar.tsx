@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { AlertTriangle, Loader2, LogOut, UserX } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function Navbar() {
     const { data: session } = useSession();
@@ -47,53 +48,81 @@ export function Navbar() {
 
     return (
         <AlertDialog>
-        <nav className="z-50 w-full p-4 bg-black text-white">
-            <div className="flex items-center justify-between  mx-4 sm:mx-10 md:mx-9 lg:mx-27 z-10000">
+        <nav className="z-50 w-full p-4 absolute bg-transparent text-white ">
+            <div className="flex items-center justify-between  mx-4 sm:mx-10 md:mx-9 lg:mx-27">
                 <a 
                 className="font-semibold text-xl tracking-tight hover:underline cursor-pointer
                 "
                 href="#">Mystery Chat</a>
                 
                     
-                    
-               <DropdownMenu>
-              {/* Trigger button using the username */}
-              <DropdownMenuTrigger asChild> 
-                <Button variant="link" className="text-lg font-semibold text-white undrerline
-                 underline-offset-4 cursor-pointer
-                 px-4 py-4 rounded-lg">
-                  {username}
-                </Button>
-              </DropdownMenuTrigger>
-              
-              <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                
-                {/* LOGOUT BUTTON: Now uses AlertDialogTrigger and sets state */}
-                <AlertDialogTrigger asChild>
-                    <DropdownMenuItem 
-                        onClick={() => setActionToConfirm('logout')} 
-                        className="cursor-pointer"
-                    >
-                        <LogOut className="mr-2 h-4 w-4" />
-                        <span>Logout</span>
-                    </DropdownMenuItem>
-                </AlertDialogTrigger>
-                
-                {/* DELETE ACCOUNT BUTTON: Uses AlertDialogTrigger and sets state */}
-                <AlertDialogTrigger asChild>
-                  <DropdownMenuItem 
-                      onClick={() => setActionToConfirm('delete')}
-                      className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+              {
+                session && (
+                    <DropdownMenu>
+                      {/* Trigger button using the username */}
+                      <DropdownMenuTrigger asChild> 
+                        <Button variant="link" className="text-lg font-semibold text-white undrerline
+                        underline-offset-4 cursor-pointer
+                        px-4 py-4 rounded-lg ">
+                          {username}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      
+                      <DropdownMenuContent className="w-56" align="end">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        
+                        {/* LOGOUT BUTTON: Now uses AlertDialogTrigger and sets state */}
+                        <AlertDialogTrigger asChild>
+                            <DropdownMenuItem 
+                                onClick={() => setActionToConfirm('logout')} 
+                                className="cursor-pointer"
+                            >
+                                <LogOut className="mr-2 h-4 w-4" />
+                                <span>Logout</span>
+                            </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        
+                        {/* DELETE ACCOUNT BUTTON: Uses AlertDialogTrigger and sets state */}
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem 
+                              onClick={() => setActionToConfirm('delete')}
+                              className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                          >
+                            <UserX className="mr-2 h-4 w-4" />
+                            <span>Delete Account</span>
+                          </DropdownMenuItem>
+                        </AlertDialogTrigger>
+                        
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                ) }
+
+
+              {
+                !session && (
+                  <motion.div
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.97, y: 1 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   >
-                    <UserX className="mr-2 h-4 w-4" />
-                    <span>Delete Account</span>
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
-                
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    <Link
+                      href="/signin"
+                      className="
+                        px-5 py-2.5 rounded-md font-semibold text-sm
+                        bg-gradient-to-br from-white to-gray-200
+                        text-black shadow-[0_4px_20px_rgba(255,255,255,0.3)]
+                        border border-white/60
+                        hover:shadow-[0_6px_25px_rgba(255,255,255,0.45)]
+                        transition-all duration-300 backdrop-blur-sm
+                      "
+                    >
+                      Login
+                    </Link>
+                  </motion.div>
+                )
+              }      
+
                     
                 
            </div> 
@@ -133,6 +162,7 @@ export function Navbar() {
               ) : null}
               {actionText}
             </Button>
+            
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
