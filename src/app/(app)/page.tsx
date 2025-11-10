@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/carousel"
 import AutoPlay from "embla-carousel-autoplay"
 import messages from '@/messages.json'
-import { BackgroundRippleEffect } from '@/components/ui/background-ripple-effect'
 
 //import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect";
 
