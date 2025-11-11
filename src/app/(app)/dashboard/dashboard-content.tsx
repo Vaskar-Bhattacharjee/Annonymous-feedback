@@ -2,17 +2,19 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Message } from "@/model/User";
 import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { acceptMessageSchema } from '@/schemas/acceptMessageSchema';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { motion } from "framer-motion"
-import { Loader2, RotateCcw, Trash } from 'lucide-react';
+import { Loader2, RotateCcw } from 'lucide-react';
 
 interface DashboardContentProps {
     username: string;
@@ -32,18 +34,29 @@ export default function DashboardContent({
   const [isAcceptingMessages, setIsAcceptingMessages] = useState(initialAcceptStatus);
   const handleDeleteMessage = async (messageId: string) => {
     // update local state immediately
+    const prev = [...messages];
     setMessages((prev) => prev.filter((message) => message._id !== messageId));
-    // optional: notify server about deletion
     try {
-      await axios.post('/api/delete-message', { id: messageId });
-      toast.success('Message deleted', {
-        duration: 2000,
+      const response = await axios.delete('/api/delete-message', {
+        data: { id: messageId }
       });
-    } catch (error: unknown) {
+      if (response.data.success) {
+        toast.success('Message deleted', {
+        duration: 2000,
+      })
+      
+    }
+      
+    } catch (error: any) {
+      if(axios.isAxiosError(error) && error.response){
+        console.error('Error response:', error.response.data);
+      }
+      
       toast.error('Failed to delete message', {
         duration: 2000,
       });
       console.error(error);
+      setMessages(prev);
     }
   }
   const initialMessage = initialAcceptStatus
@@ -130,7 +143,7 @@ useEffect(() => {
       <div className="max-w-7xl sm:max-w-3xl md:max-w-4xl lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 mt-[-1rem] md:py-8">
         
         {/* Header */}
-        <motion.div className="mb-10 flex items-center justify-between"
+        <motion.div className="mt-8 flex items-center justify-between"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -201,12 +214,15 @@ useEffect(() => {
                     <div className="text-white font-semibold text-xl sm:text-2xl md:text-3xl lg:text-3xl">
                       Are You Accepting New Messages :
                     </div>
+                    <div className='flex justify-center items-center gap-0'>
                     <Switch
                       className="mr-2 cursor-pointer border-2 ring-1 ring-white/70 transition-all duration-300 data-[state=checked]:bg-green-500 data-[state=checked]:ring-green-400 "
                       checked={isAcceptingMessages}
                       onCheckedChange={handleSwitchChange}
-                      aria-readOnly
                     />
+                    <p className='text-white text-md'>{isAcceptingMessages ? 'ON' : 'OFF'}</p>
+
+                    </div>
                   </div>
                 </div>
               </form>
@@ -219,8 +235,8 @@ useEffect(() => {
 
         {/* Messages List */}
         <div>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">Your Messages</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl text-white font-semibold">Your Messages :</h2>
             <Button
               className="flex items-center gap-2 group cursor-pointer"
               variant="outline"
@@ -242,7 +258,7 @@ useEffect(() => {
           {messages.length > 0 ? (
             <motion.div 
             className="grid grid-cols-1 md:grid-cols-2
-             lg:grid-cols-3 gap-4"
+             lg:grid-cols-3 gap-6"
              initial="hidden"
               animate="visible"
               variants={{
@@ -252,40 +268,53 @@ useEffect(() => {
              >
               {messages.map((message, index) => (
                 <motion.div
+                className='hover:cursor-pointer'
                 key={message._id}
                 variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0 }
                 }}
-                whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
+                exit={{ opacity: 0, x: 20, scale: 0.8 }}
                 >
 
                 <Card
-                className="transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-white/10"
+                className=" flex flex-row items-center gap-4 relative justify-between transform transition-all duration-300 hover:scale-101 hover:shadow-xl hover:shadow-white/10"
 
                 style={{ 
                   animation: `fadeInUp 0.5s ease-out ${index * 100}ms forwards`,
                   transitionProperty: 'opacity, transform'
                  }}
                 key={message._id}>
-                  <CardHeader>
-                    <CardTitle className="line-clamp-3">{message.content}</CardTitle>
+                  <CardHeader className=" flex flex-col gap-4 justify-between items-start">
+                    <CardTitle className="w-[200px]">{message.content}</CardTitle>
                     <CardDescription>
                       {/* You can format this date */}
                       Received at: {String(message.createdAt)}
                     </CardDescription>
+                   
                   </CardHeader>
-                  <CardContent>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="transition-all hover:scale-105"
-                      onClick={() => handleDeleteMessage(message._id)}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            className="transition-all hover:scale-105 absolute top-2 right-2 mx-3 py-2 cursor-pointer"
+                            onClick={() => handleDeleteMessage(message._id)}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+                          </Button>
+                    </TooltipTrigger>
+                    <TooltipContent 
+                    sideOffset={5}
+                    className='bg-red-200 h-8'
                     >
-                      <Trash className="h-4 w-4 mr-2" /> Delete
-                    </Button>
-                  </CardContent>
+                      <p className='text-black text-[14px]'>Permanently Delete</p>
+      </TooltipContent>
+                  </Tooltip>
+
+               
+                 
                 </Card>
 
                 </motion.div>

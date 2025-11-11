@@ -8,6 +8,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { AlertTriangle, Loader2, LogOut, UserX } from "lucide-react";
 import { motion } from "framer-motion";
+import { Separator } from "./ui/separator";
 
 export function Navbar() {
     const { data: session } = useSession();
@@ -126,6 +127,8 @@ export function Navbar() {
                     
                 
            </div> 
+            <Separator className="bg-gray-600 h-2 w-[70%] mt-3 dark:bg-gray-800" />
+
         </nav>
 
 
