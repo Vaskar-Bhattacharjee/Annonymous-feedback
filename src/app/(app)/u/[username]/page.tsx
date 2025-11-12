@@ -68,7 +68,7 @@ function Page() {
                 <h1 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-300 mb-2">
                     Send a Message Anonymously
                 </h1>
-                <p className="text-sm text-gray-400">
+                <p className="text-[16px] text-gray-400">
                     Your message will be sent anonymously.
                 </p>
             </div>
@@ -85,10 +85,8 @@ function Page() {
                       <FormControl>
                         <Textarea
                             placeholder="Write your secret message here..."
-                            className="text-white text-2xl  bg-gray-900/60 border-2 border-gray-700/50 rounded-lg min-h-[120px] 
-                                       placeholder:text-gray-500 
-                                       focus:border-amber-400 focus:ring-1 focus:ring-amber-400 
-                                       transition-all duration-300 ease-in-out" 
+                            className="text-white text-2xl  bg-gray-900/60 border-2 border-gray-700/90 rounded-lg min-h-[120px] 
+                                       placeholder:text-gray-500  outline-none focus:outline-none                                       transition-all duration-300 ease-in-out" 
                             {...field} 
                         />
                       </FormControl>

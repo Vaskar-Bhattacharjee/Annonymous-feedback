@@ -5,10 +5,11 @@ import { useSession, signOut } from "next-auth/react";
 import { User } from "next-auth";
 import { Button } from "./ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { AlertTriangle, Loader2, LogOut, UserX } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { AlertTriangle, Loader2, LogOut, UserX, CircleGauge, User as UserIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Separator } from "./ui/separator";
+
 
 export function Navbar() {
     const { data: session } = useSession();
@@ -51,10 +52,9 @@ export function Navbar() {
         <AlertDialog>
         <nav className="z-50 w-full p-4 absolute bg-transparent text-white ">
             <div className="flex items-center justify-between  mx-4 sm:mx-10 md:mx-9 lg:mx-27">
-                <a 
-                className="font-semibold text-xl tracking-tight hover:underline cursor-pointer
-                "
-                href="#">Mystery Chat</a>
+                <Link
+                className="font-semibold text-xl tracking-tight hover:scale-105 transition-all duration-200 ease-in-out cursor-pointer"
+                href="/">Mystery Chat</Link>
                 
                     
               {
@@ -62,22 +62,35 @@ export function Navbar() {
                     <DropdownMenu>
                       {/* Trigger button using the username */}
                       <DropdownMenuTrigger asChild> 
-                        <Button variant="link" className="text-lg font-semibold text-white undrerline
-                        underline-offset-4 cursor-pointer
-                        px-4 py-4 rounded-lg ">
+                        <div className="flex items-center justify-center gap-0 cursor-pointer hover:scale-115 transition-all duration-200 ease-in-out">
+                        <UserIcon className=" h-5 w-5"/>
+                        <Button
+                        className="text-lg font-semibold text-white bg-transparent hover:bg-transparent cursor-pointer
+                        pr-4 ml-[-8px] py-4 rounded-lg ">
                           {username}
                         </Button>
+                        </div>
+                      
                       </DropdownMenuTrigger>
                       
                       <DropdownMenuContent className="w-56" align="end">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
+                       
+                        <Link href={'/dashboard'}>
+                        
+                         <DropdownMenuItem 
+                          className="cursor-pointer text-md gap-2 flex items-center py-2 hover:font-medium hover:ml-2 transition-all duration-200 ease-in-out"
+                        >
+                          <CircleGauge className="mr-2 h-5 w-5" />
+                          Dashboard
+                        </DropdownMenuItem>
+                         </Link>
+                       
                         
                         {/* LOGOUT BUTTON: Now uses AlertDialogTrigger and sets state */}
                         <AlertDialogTrigger asChild>
                             <DropdownMenuItem 
                                 onClick={() => setActionToConfirm('logout')} 
-                                className="cursor-pointer"
+                                className="cursor-pointer text-md hover:font-medium hover:ml-2 transition-all duration-200 ease-in-out"
                             >
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Logout</span>
@@ -88,7 +101,8 @@ export function Navbar() {
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem 
                               onClick={() => setActionToConfirm('delete')}
-                              className="text-red-600 focus:text-red-600 focus:bg-red-50 cursor-pointer"
+                              className="text-red-600 focus:text-red-600 hover:font-medium text-md
+                              hover:ml-2 transition-all duration-200 ease-in-out focus:bg-red-50 cursor-pointer"
                           >
                             <UserX className="mr-2 h-4 w-4" />
                             <span>Delete Account</span>
@@ -137,14 +151,16 @@ export function Navbar() {
           <AlertDialogTitle className="flex items-center">
             {dialogTitle}
           </AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogDescription className="font-medium text-md ">
             {dialogDescription}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           {/* Cancel Button */}
           <AlertDialogCancel asChild>
-            <Button className='cursor-pointer outline-0' variant="outline" disabled={isDeleting}>Cancel</Button>
+            
+              <Button className='cursor-pointer shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] ' variant={'outline'} disabled={isDeleting}>Cancel</Button>
+            
           </AlertDialogCancel>
           
           {/* Action Button: Handles the dynamic logic */}
@@ -152,10 +168,11 @@ export function Navbar() {
             asChild
             onClick={handleAction} // Executes either logout or delete
             disabled={isDeleting}
+
           >
             <Button
               // Use conditional variants for styling (destructive for delete)
-              className="cursor-pointer"
+              className="cursor-pointer shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)]"
               variant={actionVariant as 'destructive' | 'default'} 
               disabled={isDeleting}
             >
