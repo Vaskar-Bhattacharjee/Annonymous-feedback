@@ -70,8 +70,12 @@ export async function GET() {
         }, {
             status: 200
          })
-    } catch (error: any) {
-        console.error("Error fetching message acceptance status:", error);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.error("Error fetching message acceptance status:", error.message);
+        } else {
+            console.error("Error fetching message acceptance status:", error);
+        }
         return Response.json({
             success: false,
             message: "Error while fetching message acceptance status"

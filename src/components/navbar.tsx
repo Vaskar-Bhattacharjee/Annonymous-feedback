@@ -20,12 +20,19 @@ export function Navbar() {
 
     const handleAction = async (e: React.MouseEvent) => {
     e.preventDefault(); 
-    if (actionToConfirm === 'logout') {
-     signOut();
-
-    } else if (actionToConfirm === 'delete') {
-      
-      //await handleDeleteAccount(); 
+    try {
+      if (actionToConfirm === 'logout') {
+       signOut();
+  
+      } else if (actionToConfirm === 'delete') {
+        setIsDeleting(true);
+        //await handleDeleteAccount(); 
+      }
+    } catch (error) {
+      console.error("Error during action:", error);
+    }
+    finally {
+      setIsDeleting(false);
     }
     setActionToConfirm(null);
   };

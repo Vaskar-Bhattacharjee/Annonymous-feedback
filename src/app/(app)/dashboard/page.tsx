@@ -21,13 +21,13 @@ try {
    const userEmail = session?.user.email
     const user = await UserModel.findOne({ email: userEmail })
     .select('username isAcceptingMessage messages')
-    .lean() as any;
+    
     if (!user) {
       redirect('/signin');
   
     }
 
-    const serializedMessages: Message[] = (user.messages || []).map(msg => {
+    const serializedMessages: Message[] = (user.messages || []).map( (msg: Message)  => {
             // Guarantee that every property is a primitive string.
             return {
                 _id: String(msg._id),

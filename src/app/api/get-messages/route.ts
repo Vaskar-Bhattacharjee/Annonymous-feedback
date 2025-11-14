@@ -6,7 +6,7 @@ import UserModel from "@/model/User";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET() {
     await dbConnect();
     const session = await getServerSession(authOptions);
      
@@ -49,7 +49,8 @@ export async function GET(request: Request) {
              messages: user[0].messages },
             { status: 200 }
         );
-    } catch (error : any) {
+    } catch (error : unknown) {
+        console.error('Error occurred while getting messages:', error);
         return NextResponse.json(
             { success: false, message: "error occuring while getting message function triggered" },
             { status: 500 }

@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     const expiryDate = new Date();
     expiryDate.setHours(expiryDate.getHours() + 1);
 
-    let userToVerify;
+    
     if (existingUserByEmail) {
       if (existingUserByEmail.isVerified) {
         console.log("Email already registered & verified:", email);
@@ -47,8 +47,6 @@ export async function POST(request: Request) {
         existingUserByEmail.verfiyCode = verificationCode; // keep same spelling as your model (or fix both to verifyCode)
         existingUserByEmail.verifyCodeExpire = expiryDate;
         await existingUserByEmail.save();
-        userToVerify = existingUserByEmail;
-        console.log("Updated existing unverified user:", existingUserByEmail._id);
       }
     } else {
       // create new user
@@ -64,9 +62,7 @@ export async function POST(request: Request) {
         messages: [],
       });
       await newUser.save();
-      userToVerify = newUser;
-      console.log("Created new user:", newUser._id);
-    }
+          }
 
     // Send verification email
     try {
@@ -82,8 +78,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true, message: "Verification code sent to email" }, { status: 201 });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("SERVER ERROR in /api/sign-up:", error);
-    return NextResponse.json({ success: false, message: error?.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ success: false, message: error instanceof Error ? error.message : "Internal server error" }, { status: 500 });
   }
 }

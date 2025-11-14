@@ -154,7 +154,7 @@ function Page() {
             </Button>
 
             <div className="flex justify-center items-center">
-              <p className="text-md mx-auto text-gray-600">Don't have an account? <Link href="/signup" className="text-blue-500 hover:underline">Sign up</Link></p>
+              <p className="text-md mx-auto text-gray-600">Do not have an account? <Link href="/signup" className="text-blue-500 hover:underline">Sign up</Link></p>
             </div>
           </form>
         </Form>

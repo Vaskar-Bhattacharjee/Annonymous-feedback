@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import { dbConnect } from "@/lib/dbConnect";
 import UserModel from "@/model/User";
 
+
+
 export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -13,12 +15,12 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "text" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize(credentials: any): Promise<any> {
+            async authorize(credentials: Record<"email" | "password", string> | undefined){
                 await dbConnect();
                 try {
                     const user = await UserModel.findOne({
                         $or: [
-                            { email: credentials.identifier },
+                            { email: credentials?.email },
                             {  isVerified: true }
                         ]
                     })
@@ -28,13 +30,19 @@ export const authOptions: NextAuthOptions = {
                     if (!user.isVerified) {
                         throw new Error("User email is not verified, please verify before logging in");
                     }
+                    if (!credentials?.password) {
+                        throw new Error("Password is required");
+                    }
                     const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
                     if (!isPasswordValid) {
                         throw new Error("Invalid password");
                     }
                     return user
 
-                } catch (error : any) {
+                } catch (error: unknown) {
+                    if (error instanceof Error) {
+                        throw new Error(`Authentication failed: ${error.message}`);
+                    }
                     throw new Error("Authentication failed");
                 }
   

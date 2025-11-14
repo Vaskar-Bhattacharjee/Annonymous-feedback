@@ -20,7 +20,7 @@ function Page() {
         },
       })
         
-      const onSubmit = async (data: any) => {
+      const onSubmit = async (data: { content: string }) => {
         const content = data.content
         const usernameFromPath = window.location.pathname.split('/u/')[1]
         const username = usernameFromPath
@@ -38,13 +38,18 @@ function Page() {
             } else {
                 toast.error('Failed to submit message', { description: response.data?.message || 'Unknown error' })
             }
-        } catch (err: any) {
+        } catch (err: unknown) {
+            
             if (axios.isAxiosError(err) && err.response) {
                 const serverMsg = err.response.data?.message || `Request failed (${err.response.status})`;
                 toast.error('Submission Error', { description: serverMsg });
                 return;
             }
-            toast.error('Failed to submit message', { description: err.message })
+            if (err instanceof Error) {
+                toast.error('Failed to submit message', { description: err.message });
+            } else {
+                toast.error('Failed to submit message', { description: 'An unknown error occurred' });
+            }
             console.error("Error submitting message:", err)
         } finally {
             setIsLoading(false) // Stop loading in all cases

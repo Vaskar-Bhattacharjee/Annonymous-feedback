@@ -47,7 +47,7 @@ export default function DashboardContent({
       
     }
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       if(axios.isAxiosError(error) && error.response){
         console.error('Error response:', error.response.data);
       }

@@ -36,8 +36,8 @@ export async function POST(request: Request) {
             { success: true, message: "Message sent successfully" },
             { status: 200 }
         );
-    } catch (error : any) {
-        console.log(" Error in send-message route:", error);
+    } catch (error : unknown) {
+        console.error("Error occurred while sending message:", error);
         return NextResponse.json(
             { success: false, message: "error occuring while sending message" },
             { status: 500 }
