@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+# **Anonymous Feedback**
+
+A simple and privacy-focused feedback system built with Next.js, TypeScript, MongoDB, and Tailwind CSS.
+Users can submit feedback anonymously, and admins can view/manage submissions through a protected dashboard.
+
+---
+
+## **Features**
+
+* Anonymous feedback submission
+* Custom signup + NextAuth authentication
+* MongoDB database integration
+* Clean and minimal UI (Tailwind CSS)
+* Email delivery powered by Resend
+* OpenAI integration (if you plan to use it later)
+
+---
+
+## **Tech Stack**
+
+* **Framework:** Next.js (App Router)
+* **Language:** TypeScript
+* **Database:** MongoDB
+* **Auth:** NextAuth + custom signup
+* **Styling:** Tailwind CSS
+* **Email:** Resend
+* **Other:** OpenAI API
+
+---
+
+## **Getting Started**
+
+### **Prerequisites**
+
+Make sure you have the following installed:
+
+* Node.js 18+
+* MongoDB connection string
+* npm / pnpm / yarn
+
+---
+
+## **Installation**
+
+```bash
+git clone https://github.com/Vaskar-Bhattacharjee/Annonymous-feedback.git
+cd Annonymous-feedback
+npm install
+```
+
+---
+
+## **Environment Variables**
+
+Create a file named `.env.local` in the project root and add:
+
+```
+MONGODB_URI=""
+RESEND_API_KEY=""
+NEXTAUTH_SECRET=""
+OPENAI_API_KEY=""
+```
+
+Make sure each variable has a valid value before running the project.
+
+---
+
+## **Run the Project**
+
+### **Development**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Now open:
+**[http://localhost:3000](http://localhost:3000)**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Production Build**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## **Project Structure (Simplified)**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+app/
+  api/
+  (routes, pages, components)
+components/
+lib/
+styles/
+public/
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## **Deployment**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The project runs smoothly on platforms like:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+* **Vercel** (recommended)
+* Railway / Render
+* Any Node.js hosting
+
+Make sure to add your environment variables to your hosting provider.
+
+---
+
+## **License**
+
+This project doesn’t include a license yet.
+If you want to make your repository open-source, I recommend choosing **MIT License** — I can generate it for you anytime.
+
+---
+
+## **Author**
+
+Developed by **Vaskar Bhattacharjee**
+
+If you want, I can also add:
+
+* CONTRIBUTING.md
+* LICENSE file
+* Badges (build, version, tech stack)
+* A cleaner repo structure layout
+
+Just tell me!
