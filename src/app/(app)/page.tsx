@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import AutoPlay from "embla-carousel-autoplay"
+import { BackgroundBeams } from '@/components/ui/background-beams'
 // import messages from '@/messages.json' // Removed this import as it was causing an error
 
 // Using mock data here as the JSON file path could not be resolved
@@ -41,13 +42,11 @@ function Home() {
   return (
     
     // Main container: Added padding `p-4` for small screens
-    <div className="max-w-screen min-h-screen flex items-center flex-col justify-center bg-gradient-to-br from-black via-gray-800 to-gray-800 p-4">
-          <div className="absolute inset-0 -z-0">
-              
-          </div>
+    <div className="max-w-screen min-h-screen flex items-center flex-col justify-center bg-gradient-to-br from-black via-gray-800 to-black p-4">
+      <BackgroundBeams />
       
       {/* Title: Adjusted text sizes and margins for responsiveness */}
-      <h1 className='font-bold text-3xl sm:text-4xl md:text-5xl mt-16 sm:mt-20 md:mt-24 text-center px-4 font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100' >
+      <h1 className='font-bold text-3xl sm:text-4xl md:text-5xl mt-12 sm:mt-20 md:mt-24 text-center px-4 font-mono tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-gray-300 to-gray-100' >
         Share Your Thoughts Anonymously
       </h1>
       
@@ -57,7 +56,7 @@ function Home() {
       </p>
       
        {/* Carousel Container: Adjusted width to be responsive */}
-      <div className='w-full max-w-sm sm:max-w-md md:max-w-lg mt-8 sm:mt-10 md:mt-12 flex justify-center'>
+      <div className='w-full h-[calc(100%-2rem)] max-w-sm sm:max-w-md md:max-w-lg mt-5 sm:mt-10 md:mt-12 flex justify-center'>
         <Carousel 
           className="w-full" // Removed max-w-xs, letting parent control width
           plugins={[AutoPlay({ delay: 4000 })]}

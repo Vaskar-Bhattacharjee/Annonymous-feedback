@@ -78,7 +78,7 @@ export function Navbar() {
                         <Link href={'/dashboard'}>
                         
                          <DropdownMenuItem 
-                          className="cursor-pointer text-md gap-2 flex items-center py-2 hover:font-medium hover:ml-2 transition-all duration-200 ease-in-out"
+                          className="cursor-pointer tracking-tight text-md gap-2 flex items-center py-2 hover:font-medium hover:ml-2 transition-all duration-200 ease-in-out"
                         >
                           <CircleGauge className="mr-2 h-5 w-5" />
                           Dashboard
@@ -90,7 +90,7 @@ export function Navbar() {
                         <AlertDialogTrigger asChild>
                             <DropdownMenuItem 
                                 onClick={() => setActionToConfirm('logout')} 
-                                className="cursor-pointer text-md hover:font-medium hover:ml-2 transition-all duration-200 ease-in-out"
+                                className="cursor-pointer tracking-tight text-md hover:font-medium hover:ml-2 transition-all duration-200 ease-in-out"
                             >
                                 <LogOut className="mr-2 h-4 w-4" />
                                 <span>Logout</span>
@@ -101,7 +101,7 @@ export function Navbar() {
                         <AlertDialogTrigger asChild>
                           <DropdownMenuItem 
                               onClick={() => setActionToConfirm('delete')}
-                              className="text-red-600 focus:text-red-600 hover:font-medium text-md
+                              className="text-red-600 focus:text-red-600 tracking-tight hover:font-medium text-md
                               hover:ml-2 transition-all duration-200 ease-in-out focus:bg-red-50 cursor-pointer"
                           >
                             <UserX className="mr-2 h-4 w-4" />
